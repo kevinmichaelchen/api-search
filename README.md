@@ -20,6 +20,8 @@ go run main.go
 
 ## Usage
 
+Check out the [full API](./idl/coop/drivers/search/v1beta1/api.proto).
+
 ### Ingestion
 
 Generate a fake CSV file of drivers with
