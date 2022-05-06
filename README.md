@@ -2,7 +2,9 @@
 
 [![Lines Of Code](https://tokei.rs/b1/github/kevinmichaelchen/api-search?category=code)](https://github.com/kevinmichaelchen/api-search)
 
-A proof-of-concept search service, powered by [Meilisearch](https://www.meilisearch.com/).
+A proof-of-concept search service, powered by
+[**Meilisearch**](https://www.meilisearch.com/) and
+[**meilisearch-go**](https://github.com/meilisearch/meilisearch-go).
 
 ## Project structure
 
