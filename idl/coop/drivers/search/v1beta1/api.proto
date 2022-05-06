@@ -4,8 +4,6 @@ package coop.drivers.search.v1beta1;
 
 option go_package = "github.com/kevinmichaelchen/api-search/internal/idl/coop/drivers/search/v1beta1";
 
-import "google/protobuf/any.proto";
-
 service SearchService {
   rpc Ingest(IngestRequest) returns (IngestResponse) {}
   rpc Search(SearchRequest) returns (SearchResponse) {}
@@ -43,17 +41,3 @@ message Driver {
   string email = 4;
   string phone = 5;
 }
-
-/**
-{
-  "hits": [{
-    "id": 6,
-    "title": "Philadelphia",
-    "genres": ["Drama"]
-  }],
-  "offset": 0,
-  "limit": 10,
-  "processingTimeMs": 1,
-  "query": "philoudelphia"
-}
- */
