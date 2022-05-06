@@ -17,6 +17,10 @@ var rootCmd = &cobra.Command{
 	Long: `Search is a tool to make gRPC requests built with
                 love by The Drivers Coop.`,
 	Run: func(cmd *cobra.Command, args []string) {},
+	PersistentPostRun: func(cmd *cobra.Command, args []string) {
+		log.Println("Closing gRPC connection...")
+		conn.Close()
+	},
 }
 
 var conn *grpc.ClientConn
@@ -33,6 +37,7 @@ func init() {
 
 	ingestCmd.AddCommand(ingestDriversCmd)
 
+	generateCmd.PersistentFlags().IntVarP(&size, "size", "s", 300, "Number of fake records to generate")
 	searchCmd.PersistentFlags().Int32VarP(&limit, "limit", "l", 10, "Max number of results to return")
 	searchCmd.PersistentFlags().StringVarP(&query, "query", "q", "", "Search query")
 

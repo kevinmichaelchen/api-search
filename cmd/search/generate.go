@@ -10,6 +10,8 @@ import (
 	"os"
 )
 
+var size int
+
 var generateCmd = &cobra.Command{
 	Use:   "generate",
 	Short: "Generate CSV with fake data",
@@ -29,7 +31,7 @@ func generateFakeCSV(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatalf("failed to write csv headers: %v", err)
 	}
-	for i := 0; i < 300; i++ {
+	for i := 0; i < size; i++ {
 		firstName := faker.FirstName()
 		lastName := faker.LastName()
 		err := w.Write([]string{
