@@ -12,6 +12,12 @@ A proof-of-concept search service, powered by [Meilisearch](https://www.meilisea
 | [`./internal/idl`](./internal/idl)           | Auto-generated protobufs                  |
 | [`./internal/service`](./internal/service)   | Service layer / Business logic            |
 
+## Getting started
+```bash
+docker-compose up -d
+go run main.go
+```
+
 ## Usage
 
 ### Ingestion
