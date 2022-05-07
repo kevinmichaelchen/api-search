@@ -19,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SearchServiceClient interface {
 	Ingest(ctx context.Context, in *IngestRequest, opts ...grpc.CallOption) (*IngestResponse, error)
-	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
+	Query(ctx context.Context, in *QueryRequest, opts ...grpc.CallOption) (*QueryResponse, error)
 }
 
 type searchServiceClient struct {
@@ -39,9 +39,9 @@ func (c *searchServiceClient) Ingest(ctx context.Context, in *IngestRequest, opt
 	return out, nil
 }
 
-func (c *searchServiceClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error) {
-	out := new(SearchResponse)
-	err := c.cc.Invoke(ctx, "/coop.drivers.search.v1beta1.SearchService/Search", in, out, opts...)
+func (c *searchServiceClient) Query(ctx context.Context, in *QueryRequest, opts ...grpc.CallOption) (*QueryResponse, error) {
+	out := new(QueryResponse)
+	err := c.cc.Invoke(ctx, "/coop.drivers.search.v1beta1.SearchService/Query", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (c *searchServiceClient) Search(ctx context.Context, in *SearchRequest, opt
 // for forward compatibility
 type SearchServiceServer interface {
 	Ingest(context.Context, *IngestRequest) (*IngestResponse, error)
-	Search(context.Context, *SearchRequest) (*SearchResponse, error)
+	Query(context.Context, *QueryRequest) (*QueryResponse, error)
 }
 
 // UnimplementedSearchServiceServer should be embedded to have forward compatible implementations.
@@ -63,8 +63,8 @@ type UnimplementedSearchServiceServer struct {
 func (UnimplementedSearchServiceServer) Ingest(context.Context, *IngestRequest) (*IngestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ingest not implemented")
 }
-func (UnimplementedSearchServiceServer) Search(context.Context, *SearchRequest) (*SearchResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
+func (UnimplementedSearchServiceServer) Query(context.Context, *QueryRequest) (*QueryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Query not implemented")
 }
 
 // UnsafeSearchServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -96,20 +96,20 @@ func _SearchService_Ingest_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SearchService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchRequest)
+func _SearchService_Query_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SearchServiceServer).Search(ctx, in)
+		return srv.(SearchServiceServer).Query(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/coop.drivers.search.v1beta1.SearchService/Search",
+		FullMethod: "/coop.drivers.search.v1beta1.SearchService/Query",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SearchServiceServer).Search(ctx, req.(*SearchRequest))
+		return srv.(SearchServiceServer).Query(ctx, req.(*QueryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -126,8 +126,8 @@ var SearchService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SearchService_Ingest_Handler,
 		},
 		{
-			MethodName: "Search",
-			Handler:    _SearchService_Search_Handler,
+			MethodName: "Query",
+			Handler:    _SearchService_Query_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

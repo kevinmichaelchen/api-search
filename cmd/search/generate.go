@@ -26,7 +26,7 @@ func generateFakeCSV(cmd *cobra.Command, args []string) {
 	}
 	w := csv.NewWriter(f)
 	err = w.Write([]string{
-		"id", "first_name", "last_name", "email", "phone_number",
+		"id", "first_name", "last_name", "email", "phone",
 	})
 	if err != nil {
 		log.Fatalf("failed to write csv headers: %v", err)

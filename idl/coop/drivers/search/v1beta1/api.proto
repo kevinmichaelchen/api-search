@@ -4,40 +4,10 @@ package coop.drivers.search.v1beta1;
 
 option go_package = "github.com/kevinmichaelchen/api-search/internal/idl/coop/drivers/search/v1beta1";
 
+import "coop/drivers/search/v1beta1/ingest.proto";
+import "coop/drivers/search/v1beta1/query.proto";
+
 service SearchService {
   rpc Ingest(IngestRequest) returns (IngestResponse) {}
-  rpc Search(SearchRequest) returns (SearchResponse) {}
-}
-
-message IngestRequest {
-  repeated Payload payloads = 1;
-}
-
-message IngestResponse {}
-
-message SearchRequest {
-  string query = 1;
-  int32 limit = 2;
-}
-
-message SearchResponse {
-  repeated Payload hits = 1;
-}
-
-message Payload {
-  // You'd have one possible value for every possible index.
-  // Each index returns only one kind of protobuf.
-  oneof payload {
-    Driver driver = 1;
-  }
-}
-
-// A Driver protobuf. This is a representation of what gets stored in the
-// drivers index.
-message Driver {
-  string id = 1;
-  string first_name = 2;
-  string last_name = 3;
-  string email = 4;
-  string phone = 5;
+  rpc Query(QueryRequest) returns (QueryResponse) {}
 }

@@ -30,15 +30,19 @@ func ingestDrivers(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatalf("Failed to open file: %v", err)
 	}
+	defer f.Close()
 
-	var payloads []*v1beta1.Payload
+	var drivers []*v1beta1.Driver
 
 	// Read CSV records
 	r := csv.NewReader(f)
+
+	// Skip headers
 	_, err = r.Read()
 	if err != nil && err != io.EOF {
 		log.Fatalf("Failed to read csv headers: %v", err)
 	}
+	var count int
 	for {
 		record, err := r.Read()
 		if err == io.EOF {
@@ -46,21 +50,38 @@ func ingestDrivers(cmd *cobra.Command, args []string) {
 		} else if err != nil {
 			log.Fatalf("Failed to read csv record: %v", err)
 		}
-		payloads = append(payloads, &v1beta1.Payload{
-			Payload: &v1beta1.Payload_Driver{
-				Driver: &v1beta1.Driver{
-					Id:        record[0],
-					FirstName: record[1],
-					LastName:  record[2],
-					Email:     record[3],
-					Phone:     record[4],
-				},
-			},
+		count++
+		drivers = append(drivers, &v1beta1.Driver{
+			Id:        record[0],
+			FirstName: record[1],
+			LastName:  record[2],
+			Email:     record[3],
+			Phone:     record[4],
 		})
+		// Batches
+		if count%50 == 0 {
+			log.Printf("Sent batch of %d\n", len(drivers))
+			ingest(drivers)
+			drivers = nil
+		}
 	}
+	if len(drivers) > 0 {
+		log.Printf("Sent batch of %d\n", len(drivers))
+		ingest(drivers)
+		drivers = nil
+	}
+	log.Printf("Sent %d documents total\n", count)
+}
 
+func ingest(drivers []*v1beta1.Driver) {
 	// Create request
-	req := &v1beta1.IngestRequest{Payloads: payloads}
+	req := &v1beta1.IngestRequest{
+		Payloads: &v1beta1.IngestRequest_Drivers{
+			Drivers: &v1beta1.IngestDriversRequest{
+				Drivers: drivers,
+			},
+		},
+	}
 	s, err := marshalProto(req)
 	if err != nil {
 		log.Fatalf("Failed to marshal request: %v", err)

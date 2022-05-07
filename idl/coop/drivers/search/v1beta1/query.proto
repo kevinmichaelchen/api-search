@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package coop.drivers.search.v1beta1;
+
+option go_package = "github.com/kevinmichaelchen/api-search/internal/idl/coop/drivers/search/v1beta1";
+
+import "coop/drivers/search/v1beta1/driver.proto";
+
+message QueryRequest {
+  string query = 1;
+  int32 limit = 2;
+}
+
+message QueryResponse {
+  oneof response {
+    DriverResponse drivers = 1;
+  }
+}
+
+// Response containing documents from the "drivers" index
+message DriverResponse {
+  repeated Driver results = 1;
+}

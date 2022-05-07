@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package coop.drivers.search.v1beta1;
+
+option go_package = "github.com/kevinmichaelchen/api-search/internal/idl/coop/drivers/search/v1beta1";
+
+// A Driver protobuf. This is a representation of what gets stored in the
+// drivers index.
+message Driver {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+  string phone = 5;
+}

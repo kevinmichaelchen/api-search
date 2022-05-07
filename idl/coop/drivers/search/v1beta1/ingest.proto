@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package coop.drivers.search.v1beta1;
+
+option go_package = "github.com/kevinmichaelchen/api-search/internal/idl/coop/drivers/search/v1beta1";
+
+import "coop/drivers/search/v1beta1/driver.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+message IngestRequest {
+  oneof payloads {
+    IngestDriversRequest drivers = 1;
+  }
+}
+
+message IngestDriversRequest {
+  repeated Driver drivers = 1;
+}
+
+message IngestResponse {
+  int64 uid = 1;
+  string index_uid = 2;
+  string status = 3;
+  string task_type = 4;
+  IngestDetails details = 5;
+  IngestError error = 6;
+  google.protobuf.Duration duration = 7;
+  google.protobuf.Timestamp enqueued_at = 8;
+  google.protobuf.Timestamp started_at = 9;
+  google.protobuf.Timestamp finished_at = 10;
+}
+
+message IngestDetails {}
+message IngestError {
+  string error_type = 1;
+  string link = 2;
+  string message = 3;
+  string code = 4;
+}

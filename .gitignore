@@ -1,3 +1,4 @@
 .idea
 
-fake-drivers.csv
+*.csv
+*.json

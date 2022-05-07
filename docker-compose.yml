@@ -3,6 +3,8 @@ version: "3.9"
 services:
   meilisearch:
     image: getmeili/meilisearch:latest
+    environment:
+      - MEILI_MASTER_KEY=masterKey
     volumes:
       - "ms_data:/data.ms"
     ports:

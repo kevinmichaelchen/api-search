@@ -16,14 +16,14 @@ var searchCmd = &cobra.Command{
 
 func search(cmd *cobra.Command, args []string) {
 	// Create request
-	req := &v1beta1.SearchRequest{
+	req := &v1beta1.QueryRequest{
 		Query: query,
 		Limit: limit,
 	}
 
 	// Execute request
 	client := v1beta1.NewSearchServiceClient(conn)
-	res, err := client.Search(context.Background(), req)
+	res, err := client.Query(context.Background(), req)
 	if err != nil {
 		log.Fatalf("gRPC request failed: %v", err)
 	}
