@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"encoding/base64"
+	"fmt"
 	"github.com/kevinmichaelchen/api-search/internal/idl/coop/drivers/search/v1beta1"
 	"github.com/kevinmichaelchen/api-search/internal/service/driver"
 	"github.com/meilisearch/meilisearch-go"
@@ -22,9 +24,21 @@ func NewService(logger *log.Logger, searchClient *meilisearch.Client) *Service {
 	return &Service{logger: logger, searchClient: searchClient}
 }
 
+func encode(id string) string {
+	return base64.StdEncoding.EncodeToString([]byte(id))
+}
+
+func decode(id string) (string, error) {
+	b, err := base64.StdEncoding.DecodeString(id)
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
+}
+
 func driverToMap(in *v1beta1.Driver) map[string]interface{} {
 	out := make(map[string]interface{})
-	out[driver.FieldID] = in.GetId()
+	out[driver.FieldID] = encode(in.GetId())
 	out[driver.FieldFirstName] = in.GetFirstName()
 	out[driver.FieldLastName] = in.GetLastName()
 	out[driver.FieldEmail] = in.GetEmail()
@@ -32,14 +46,18 @@ func driverToMap(in *v1beta1.Driver) map[string]interface{} {
 	return out
 }
 
-func driverFromMap(in map[string]interface{}) *v1beta1.Driver {
+func driverFromMap(in map[string]interface{}) (*v1beta1.Driver, error) {
 	out := new(v1beta1.Driver)
-	out.Id = in[driver.FieldID].(string)
+	id, err := decode(in[driver.FieldID].(string))
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode ID: %w", err)
+	}
+	out.Id = id
 	out.FirstName = in[driver.FieldFirstName].(string)
 	out.LastName = in[driver.FieldLastName].(string)
 	out.Email = in[driver.FieldEmail].(string)
 	out.Phone = in[driver.FieldPhone].(string)
-	return out
+	return out, nil
 }
 
 func (s *Service) Ingest(ctx context.Context, req *v1beta1.IngestRequest) (*v1beta1.IngestResponse, error) {
@@ -84,13 +102,17 @@ func (s *Service) Query(ctx context.Context, req *v1beta1.QueryRequest) (*v1beta
 				Limit: int64(req.GetLimit()),
 			})
 	if err != nil {
-		return &v1beta1.QueryResponse{}, nil
+		return nil, err
 	}
 	var drivers []*v1beta1.Driver
 	for _, e := range searchRes.Hits {
 		m, ok := e.(map[string]interface{})
 		if ok {
-			drivers = append(drivers, driverFromMap(m))
+			d, err := driverFromMap(m)
+			if err != nil {
+				return nil, err
+			}
+			drivers = append(drivers, d)
 		} else {
 			s.logger.Println("Type mismatch: Expected search hit to be map[string]interface{}")
 		}
