@@ -57,6 +57,14 @@ func ingestDrivers(cmd *cobra.Command, args []string) {
 			LastName:  record[2],
 			Email:     record[3],
 			Phone:     record[4],
+			TlcNumber: record[5],
+			Vehicle: &v1beta1.Vehicle{
+				Class:        record[6],
+				Make:         record[7],
+				Model:        record[8],
+				Year:         record[9],
+				LicensePlate: record[10],
+			},
 		})
 		// Batches
 		if count%50 == 0 {

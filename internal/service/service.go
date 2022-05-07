@@ -43,6 +43,14 @@ func driverToMap(in *v1beta1.Driver) map[string]interface{} {
 	out[driver.FieldLastName] = in.GetLastName()
 	out[driver.FieldEmail] = in.GetEmail()
 	out[driver.FieldPhone] = in.GetPhone()
+	out[driver.FieldTLCNumber] = in.GetTlcNumber()
+
+	out[driver.FieldVehicleClass] = in.GetVehicle().GetClass()
+	out[driver.FieldVehicleMake] = in.GetVehicle().GetMake()
+	out[driver.FieldVehicleModel] = in.GetVehicle().GetModel()
+	out[driver.FieldVehicleYear] = in.GetVehicle().GetYear()
+	out[driver.FieldLicensePlate] = in.GetVehicle().GetLicensePlate()
+
 	return out
 }
 
@@ -57,6 +65,15 @@ func driverFromMap(in map[string]interface{}) (*v1beta1.Driver, error) {
 	out.LastName = in[driver.FieldLastName].(string)
 	out.Email = in[driver.FieldEmail].(string)
 	out.Phone = in[driver.FieldPhone].(string)
+	out.TlcNumber = in[driver.FieldTLCNumber].(string)
+
+	out.Vehicle = &v1beta1.Vehicle{}
+	out.Vehicle.Class = in[driver.FieldVehicleClass].(string)
+	out.Vehicle.Make = in[driver.FieldVehicleMake].(string)
+	out.Vehicle.Model = in[driver.FieldVehicleModel].(string)
+	out.Vehicle.Year = in[driver.FieldVehicleYear].(string)
+	out.Vehicle.LicensePlate = in[driver.FieldLicensePlate].(string)
+
 	return out, nil
 }
 

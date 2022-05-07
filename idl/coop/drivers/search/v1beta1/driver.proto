@@ -12,4 +12,14 @@ message Driver {
   string last_name = 3;
   string email = 4;
   string phone = 5;
+  string tlc_number = 6;
+  Vehicle vehicle = 7;
+}
+
+message Vehicle {
+  string class = 1;
+  string make = 2;
+  string model = 3;
+  string year = 4;
+  string license_plate = 5;
 }
